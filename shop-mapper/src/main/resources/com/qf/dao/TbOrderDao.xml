@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.TbOrderDao">
+
+    <resultMap id="BaseResultMap" type="com.qf.entity.TbOrder">
+        <!--@Table tb_order-->
+        <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+        <result property="payment" column="payment" jdbcType="VARCHAR"/>
+        <result property="paymentType" column="payment_type" jdbcType="INTEGER"/>
+        <result property="postFee" column="post_fee" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="paymentTime" column="payment_time" jdbcType="TIMESTAMP"/>
+        <result property="consignTime" column="consign_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="closeTime" column="close_time" jdbcType="TIMESTAMP"/>
+        <result property="shippingName" column="shipping_name" jdbcType="VARCHAR"/>
+        <result property="shippingCode" column="shipping_code" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="buyerMessage" column="buyer_message" jdbcType="VARCHAR"/>
+        <result property="buyerNick" column="buyer_nick" jdbcType="VARCHAR"/>
+        <result property="buyerRate" column="buyer_rate" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          order_id, payment, payment_type, post_fee, status, create_time, update_time, payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message, buyer_nick, buyer_rate
+        from shop.tb_order
+        where order_id = #{orderId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          order_id, payment, payment_type, post_fee, status, create_time, update_time, payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message, buyer_nick, buyer_rate
+        from shop.tb_order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          order_id, payment, payment_type, post_fee, status, create_time, update_time, payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message, buyer_nick, buyer_rate
+        from shop.tb_order
+        <where>
+            <if test="orderId != null and orderId != ''">
+                and order_id = #{orderId}
+            </if>
+            <if test="payment != null and payment != ''">
+                and payment = #{payment}
+            </if>
+            <if test="paymentType != null">
+                and payment_type = #{paymentType}
+            </if>
+            <if test="postFee != null and postFee != ''">
+                and post_fee = #{postFee}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="paymentTime != null">
+                and payment_time = #{paymentTime}
+            </if>
+            <if test="consignTime != null">
+                and consign_time = #{consignTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="closeTime != null">
+                and close_time = #{closeTime}
+            </if>
+            <if test="shippingName != null and shippingName != ''">
+                and shipping_name = #{shippingName}
+            </if>
+            <if test="shippingCode != null and shippingCode != ''">
+                and shipping_code = #{shippingCode}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="buyerMessage != null and buyerMessage != ''">
+                and buyer_message = #{buyerMessage}
+            </if>
+            <if test="buyerNick != null and buyerNick != ''">
+                and buyer_nick = #{buyerNick}
+            </if>
+            <if test="buyerRate != null">
+                and buyer_rate = #{buyerRate}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
+        insert into shop.tb_order(payment, payment_type, post_fee, status, create_time, update_time, payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message, buyer_nick, buyer_rate)
+        values (#{payment}, #{paymentType}, #{postFee}, #{status}, #{createTime}, #{updateTime}, #{paymentTime}, #{consignTime}, #{endTime}, #{closeTime}, #{shippingName}, #{shippingCode}, #{userId}, #{buyerMessage}, #{buyerNick}, #{buyerRate})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update shop.tb_order
+        <set>
+            <if test="payment != null and payment != ''">
+                payment = #{payment},
+            </if>
+            <if test="paymentType != null">
+                payment_type = #{paymentType},
+            </if>
+            <if test="postFee != null and postFee != ''">
+                post_fee = #{postFee},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="paymentTime != null">
+                payment_time = #{paymentTime},
+            </if>
+            <if test="consignTime != null">
+                consign_time = #{consignTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="closeTime != null">
+                close_time = #{closeTime},
+            </if>
+            <if test="shippingName != null and shippingName != ''">
+                shipping_name = #{shippingName},
+            </if>
+            <if test="shippingCode != null and shippingCode != ''">
+                shipping_code = #{shippingCode},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="buyerMessage != null and buyerMessage != ''">
+                buyer_message = #{buyerMessage},
+            </if>
+            <if test="buyerNick != null and buyerNick != ''">
+                buyer_nick = #{buyerNick},
+            </if>
+            <if test="buyerRate != null">
+                buyer_rate = #{buyerRate},
+            </if>
+        </set>
+        where order_id = #{orderId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from shop.tb_order where order_id = #{orderId}
+    </delete>
+
+</mapper>

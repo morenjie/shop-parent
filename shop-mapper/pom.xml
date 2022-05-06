@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.qf.mapper</groupId>
+    <groupId>com.qf.dao</groupId>
     <artifactId>shop-mapper</artifactId>
 
     <properties>

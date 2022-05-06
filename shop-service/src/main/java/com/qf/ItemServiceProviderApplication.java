@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@MapperScan("com.qf.mapper")
+@MapperScan("com.qf.dao")
 public class ItemServiceProviderApplication {
     public static void main(String[] args) {
         SpringApplication.run(ItemServiceProviderApplication.class, args);
