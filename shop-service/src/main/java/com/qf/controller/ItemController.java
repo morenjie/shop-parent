@@ -4,6 +4,7 @@ import com.qf.pojo.TbItem;
 import com.qf.service.ItemService;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,11 +20,17 @@ public class ItemController {
         return itemService.selectItemInfo(itemId);
     }
 
+    //分页查询商品信息
     @RequestMapping("/service/item/selectTbItemAllByPage")
     PageResult selectTbItemAllByPage(@RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
                                      @RequestParam(value = "rows",required = false,defaultValue = "8") Integer rows){
         return itemService.selectTbItemAllByPage(page,rows);
     }
 
+    //新增商品
+    @RequestMapping("/service/itemParam/insertTbItem")
+    void insertTbItem(@RequestBody TbItem tbItem, @RequestParam("desc") String desc, @RequestParam("itemParams") String itemParams){
+         itemService.insertTbItem(tbItem,desc,itemParams);
+    }
 
 }

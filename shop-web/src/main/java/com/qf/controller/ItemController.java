@@ -30,7 +30,7 @@ public class ItemController {
 
     //分页查询商品信息
     @RequestMapping("selectTbItemAllByPage")
-    public Result selectTbItemAllByPage(@RequestParam(value = "page", required = false, defaultValue = "1") Integer  page,
+    public Result selectTbItemAllByPage(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                         @RequestParam(value = "rows", required = false, defaultValue = "8") Integer rows) {
         PageResult pageResult = itemFeign.selectTbItemAllByPage(page, rows);
         if (pageResult != null) {
@@ -40,4 +40,14 @@ public class ItemController {
         }
     }
 
+    @RequestMapping("insertTbItem")
+    public Result insertTbItem(TbItem tbItem, String desc, String itemParams) {
+        try {
+            itemFeign.insertTbItem(tbItem, desc, itemParams);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("新增商品失败");
+        }
+    }
 }
