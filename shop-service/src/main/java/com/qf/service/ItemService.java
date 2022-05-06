@@ -1,8 +1,10 @@
 package com.qf.service;
 
-import com.qf.entity.TbItem;
+import com.qf.pojo.TbItem;
+import com.qf.utils.PageResult;
 
 public interface ItemService {
 
     TbItem selectItemInfo(Long itemId);
-}
+
+    PageResult selectTbItemAllByPage(Integer page, Integer rows);}
