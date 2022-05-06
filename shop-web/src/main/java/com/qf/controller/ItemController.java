@@ -25,6 +25,7 @@ public class ItemController {
         } else {
             return Result.error("查询商品信息失败");
         }
+
     }
 
     //分页查询商品信息

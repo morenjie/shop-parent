@@ -24,4 +24,6 @@ public class ItemController {
                                      @RequestParam(value = "rows",required = false,defaultValue = "8") Integer rows){
         return itemService.selectTbItemAllByPage(page,rows);
     }
+
+
 }
