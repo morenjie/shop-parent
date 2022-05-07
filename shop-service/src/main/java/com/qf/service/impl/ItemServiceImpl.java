@@ -103,13 +103,35 @@ public class ItemServiceImpl implements ItemService {
         map.put("itemCat", tbItemCat.getName());
         //封装商品描述信息
         TbItemDesc tbItemDesc = tbItemDescMapper.selectByPrimaryKey(itemId);
-        map.put("itemDesc",tbItemDesc.getItemDesc());
+        map.put("itemDesc", tbItemDesc.getItemDesc());
         //封装规格参数值信息
         TbItemParamItemExample example = new TbItemParamItemExample();
         example.createCriteria().andItemIdEqualTo(itemId);
         List<TbItemParamItem> tbItemParamItems = tbItemParamItemMapper.selectByExampleWithBLOBs(example);
         TbItemParamItem tbItemParamItem = tbItemParamItems.get(0);
-        map.put("itemParamItem",tbItemParamItem.getParamData());
+        map.put("itemParamItem", tbItemParamItem.getParamData());
         return map;
+    }
+
+    //修改商品信息
+    @Override
+    public void updateTbItem(TbItem tbItem, String desc, String itemParams) {
+        //修改商品本身的消息
+        tbItem.setUpdated(new Date());
+        tbItemMapper.updateByPrimaryKeySelective(tbItem);
+        //修改商品描述的消息
+        TbItemDesc tbItemDesc = new TbItemDesc();
+        tbItemDesc.setItemDesc(desc);
+        tbItemDesc.setUpdated(new Date());
+        tbItemDesc.setItemId(tbItem.getId());
+        tbItemDescMapper.updateByPrimaryKeySelective(tbItemDesc);
+        //修改商品规格参数值的消息
+        TbItemParamItem tbItemParamItem = new TbItemParamItem();
+        tbItemParamItem.setParamData(itemParams);
+        tbItemParamItem.setUpdated(new Date());
+        tbItemParamItem.setItemId(tbItem.getId());
+        TbItemParamItemExample example = new TbItemParamItemExample();
+        example.createCriteria().andItemIdEqualTo(tbItem.getId());
+        tbItemParamItemMapper.updateByExampleSelective(tbItemParamItem, example);
     }
 }

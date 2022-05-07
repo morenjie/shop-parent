@@ -24,20 +24,26 @@ public class ItemController {
 
     //分页查询商品信息
     @RequestMapping("/service/item/selectTbItemAllByPage")
-    PageResult selectTbItemAllByPage(@RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
-                                     @RequestParam(value = "rows",required = false,defaultValue = "8") Integer rows){
-        return itemService.selectTbItemAllByPage(page,rows);
+    PageResult selectTbItemAllByPage(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                     @RequestParam(value = "rows", required = false, defaultValue = "8") Integer rows) {
+        return itemService.selectTbItemAllByPage(page, rows);
     }
 
     //新增商品
     @RequestMapping("/service/item/insertTbItem")
-    void insertTbItem(@RequestBody TbItem tbItem, @RequestParam("desc") String desc, @RequestParam("itemParams") String itemParams){
-         itemService.insertTbItem(tbItem,desc,itemParams);
+    void insertTbItem(@RequestBody TbItem tbItem, @RequestParam("desc") String desc, @RequestParam("itemParams") String itemParams) {
+        itemService.insertTbItem(tbItem, desc, itemParams);
     }
 
+    //预更新商品信息
     @RequestMapping("/service/item/preUpdateItem")
-    Map<String, Object> preUpdateItem(@RequestParam("itemId") Long itemId){
+    Map<String, Object> preUpdateItem(@RequestParam("itemId") Long itemId) {
         return itemService.preUpdateItem(itemId);
     }
 
+    //修改商品信息
+    @RequestMapping("/service/item/updateTbItem")
+    void updateTbItem(@RequestBody TbItem tbItem, @RequestParam String desc, @RequestParam String itemParams) {
+        itemService.updateTbItem(tbItem, desc, itemParams);
+    }
 }

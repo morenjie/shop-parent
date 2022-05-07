@@ -64,4 +64,15 @@ public class ItemController {
             return Result.error("回显商品失败");
         }
     }
+    @RequestMapping("updateTbItem")
+    public Result updateTbItem(TbItem tbItem, String desc, String itemParams){
+        try {
+            itemFeign.updateTbItem(tbItem,desc,itemParams);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("新增商品失败");
+        }
+    }
+
 }
