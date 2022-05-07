@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/backend/item")
 public class ItemController {
@@ -40,6 +42,7 @@ public class ItemController {
         }
     }
 
+    //新增商品
     @RequestMapping("insertTbItem")
     public Result insertTbItem(TbItem tbItem, String desc, String itemParams) {
         try {
@@ -48,6 +51,17 @@ public class ItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("新增商品失败");
+        }
+    }
+
+    //回显商品信息
+    @RequestMapping("preUpdateItem")
+    public Result preUpdateItem(@RequestParam("itemId") Long itemId) {
+        Map<String, Object> map = itemFeign.preUpdateItem(itemId);
+        if (map != null) {
+            return Result.ok(map);
+        } else {
+            return Result.error("回显商品失败");
         }
     }
 }

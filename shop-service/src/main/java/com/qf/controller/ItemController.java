@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class ItemController {
     @Autowired
@@ -28,9 +30,14 @@ public class ItemController {
     }
 
     //新增商品
-    @RequestMapping("/service/itemParam/insertTbItem")
+    @RequestMapping("/service/item/insertTbItem")
     void insertTbItem(@RequestBody TbItem tbItem, @RequestParam("desc") String desc, @RequestParam("itemParams") String itemParams){
          itemService.insertTbItem(tbItem,desc,itemParams);
+    }
+
+    @RequestMapping("/service/item/preUpdateItem")
+    Map<String, Object> preUpdateItem(@RequestParam("itemId") Long itemId){
+        return itemService.preUpdateItem(itemId);
     }
 
 }

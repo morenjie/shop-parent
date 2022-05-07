@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 //需要服务提供方的名称
 @FeignClient(value = "item-service")
@@ -30,6 +31,9 @@ public interface ItemFeign {
     @RequestMapping("/service/itemParam/{itemCatId}")
     TbItemParam selectItemParamByItemCatId(@PathVariable("itemCatId") Long itemCatId);
 
-    @RequestMapping("/service/itemParam/insertTbItem")
+    @RequestMapping("/service/item/insertTbItem")
     void insertTbItem(@RequestBody TbItem tbItem, @RequestParam("desc") String desc, @RequestParam("itemParams") String itemParams);
+
+    @RequestMapping("/service/item/preUpdateItem")
+    Map<String, Object> preUpdateItem(@RequestParam("itemId") Long itemId);
 }

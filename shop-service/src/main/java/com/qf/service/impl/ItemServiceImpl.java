@@ -2,13 +2,11 @@ package com.qf.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.qf.mapper.TbItemCatMapper;
 import com.qf.mapper.TbItemDescMapper;
 import com.qf.mapper.TbItemMapper;
 import com.qf.mapper.TbItemParamItemMapper;
-import com.qf.pojo.TbItem;
-import com.qf.pojo.TbItemDesc;
-import com.qf.pojo.TbItemExample;
-import com.qf.pojo.TbItemParamItem;
+import com.qf.pojo.*;
 import com.qf.service.ItemService;
 import com.qf.utils.IDUtils;
 import com.qf.utils.PageResult;
@@ -17,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -32,6 +32,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     TbItemParamItemMapper tbItemParamItemMapper;
+
+    @Autowired
+    TbItemCatMapper tbItemCatMapper;
 
     //根据主键查询
     @Override
@@ -85,5 +88,28 @@ public class ItemServiceImpl implements ItemService {
         tbItemParamItem.setCreated(new Date());
         tbItemParamItem.setUpdated(new Date());
         tbItemParamItemMapper.insertSelective(tbItemParamItem);
+    }
+
+    //回显商品信息
+    @Override
+    public Map<String, Object> preUpdateItem(Long itemId) {
+        Map<String, Object> map = new HashMap<>();
+        //根据商品id查询对应的商品信息
+        TbItem tbItem = tbItemMapper.selectByPrimaryKey(itemId);
+        map.put("item", tbItem);
+        //获取分类名称
+        Long cid = tbItem.getCid();
+        TbItemCat tbItemCat = tbItemCatMapper.selectByPrimaryKey(cid);
+        map.put("itemCat", tbItemCat.getName());
+        //封装商品描述信息
+        TbItemDesc tbItemDesc = tbItemDescMapper.selectByPrimaryKey(itemId);
+        map.put("itemDesc",tbItemDesc.getItemDesc());
+        //封装规格参数值信息
+        TbItemParamItemExample example = new TbItemParamItemExample();
+        example.createCriteria().andItemIdEqualTo(itemId);
+        List<TbItemParamItem> tbItemParamItems = tbItemParamItemMapper.selectByExampleWithBLOBs(example);
+        TbItemParamItem tbItemParamItem = tbItemParamItems.get(0);
+        map.put("itemParamItem",tbItemParamItem.getParamData());
+        return map;
     }
 }
