@@ -46,4 +46,10 @@ public class ItemController {
     void updateTbItem(@RequestBody TbItem tbItem, @RequestParam String desc, @RequestParam String itemParams) {
         itemService.updateTbItem(tbItem, desc, itemParams);
     }
+
+    //删除商品
+    @RequestMapping("/service/item/deleteItemById")
+    void deleteItemById(@RequestParam("itemId") Long itemId) {
+        itemService.deleteItemById(itemId);
+    }
 }

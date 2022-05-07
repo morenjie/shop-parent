@@ -64,10 +64,11 @@ public class ItemController {
             return Result.error("回显商品失败");
         }
     }
+
     @RequestMapping("updateTbItem")
-    public Result updateTbItem(TbItem tbItem, String desc, String itemParams){
+    public Result updateTbItem(TbItem tbItem, String desc, String itemParams) {
         try {
-            itemFeign.updateTbItem(tbItem,desc,itemParams);
+            itemFeign.updateTbItem(tbItem, desc, itemParams);
             return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,4 +76,14 @@ public class ItemController {
         }
     }
 
+    @RequestMapping("deleteItemById")
+    public Result deleteItemById(@RequestParam("itemId") Long itemId) {
+        try {
+            itemFeign.deleteItemById(itemId);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("删除商品失败");
+        }
+    }
 }

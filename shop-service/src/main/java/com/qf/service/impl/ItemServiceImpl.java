@@ -134,4 +134,9 @@ public class ItemServiceImpl implements ItemService {
         example.createCriteria().andItemIdEqualTo(tbItem.getId());
         tbItemParamItemMapper.updateByExampleSelective(tbItemParamItem, example);
     }
+
+    @Override
+    public void deleteItemById(Long itemId) {
+        tbItemMapper.deleteByPrimaryKey(itemId);
+    }
 }
