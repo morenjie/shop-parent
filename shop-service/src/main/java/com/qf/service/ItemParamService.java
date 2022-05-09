@@ -11,4 +11,6 @@ public interface ItemParamService {
 
 
     void insertItemParam(TbItemParam tbItemParam);
+
+    void deleteItemParamById(Long id);
 }

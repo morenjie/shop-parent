@@ -53,6 +53,16 @@ public class ItemParamController {
         }
     }
 
-
+    //删除规格参数名称消息
+    @RequestMapping("deleteItemParamById")
+    public Result deleteItemParamById(Long id) {
+        try {
+            itemFeign.deleteItemParamById(id);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("删除商品规格参数名称失败");
+        }
+    }
 
 }

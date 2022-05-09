@@ -4,10 +4,7 @@ import com.qf.pojo.TbItemParam;
 import com.qf.service.ItemParamService;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ItemParamController {
@@ -23,12 +20,18 @@ public class ItemParamController {
     //分页查询所有规格参数名称
     @RequestMapping("/service/itemParam/selectItemParamAll")
     PageResult selectItemParamAll(Integer page, Integer rows) {
-        return itemParamService.selectItemParamAll(page,rows);
+        return itemParamService.selectItemParamAll(page, rows);
     }
 
+    //新增商品规格参数
     @RequestMapping("/service/itemParam/insertItemParam")
-    void insertItemParam(@RequestBody TbItemParam tbItemParam){
-         itemParamService.insertItemParam(tbItemParam);
+    void insertItemParam(@RequestBody TbItemParam tbItemParam) {
+        itemParamService.insertItemParam(tbItemParam);
     }
 
+    //删除商品规格参数信息
+    @RequestMapping("/service/itemParam/deleteItemParamById")
+    void deleteItemParamById(@RequestParam("id") Long id) {
+        itemParamService.deleteItemParamById(id);
+    }
 }

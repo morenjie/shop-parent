@@ -50,4 +50,6 @@ public interface ItemFeign {
     @RequestMapping("/service/itemParam/insertItemParam")
     void insertItemParam(@RequestBody TbItemParam tbItemParam);
 
+    @RequestMapping("/service/itemParam/deleteItemParamById")
+    void deleteItemParamById(@RequestParam("id") Long id);
 }
