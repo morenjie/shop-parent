@@ -8,4 +8,7 @@ public interface ItemParamService {
 
 
     PageResult selectItemParamAll(Integer page, Integer rows);
+
+
+    void insertItemParam(TbItemParam tbItemParam);
 }

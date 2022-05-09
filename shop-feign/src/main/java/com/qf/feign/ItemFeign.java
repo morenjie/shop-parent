@@ -46,4 +46,8 @@ public interface ItemFeign {
     @RequestMapping("/service/itemParam/selectItemParamAll")
     PageResult selectItemParamAll(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                   @RequestParam(value = "rows", required = false, defaultValue = "5") Integer rows);
+
+    @RequestMapping("/service/itemParam/insertItemParam")
+    void insertItemParam(@RequestBody TbItemParam tbItemParam);
+
 }

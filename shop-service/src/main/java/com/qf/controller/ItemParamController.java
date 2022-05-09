@@ -5,6 +5,7 @@ import com.qf.service.ItemParamService;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,4 +25,10 @@ public class ItemParamController {
     PageResult selectItemParamAll(Integer page, Integer rows) {
         return itemParamService.selectItemParamAll(page,rows);
     }
+
+    @RequestMapping("/service/itemParam/insertItemParam")
+    void insertItemParam(@RequestBody TbItemParam tbItemParam){
+         itemParamService.insertItemParam(tbItemParam);
+    }
+
 }

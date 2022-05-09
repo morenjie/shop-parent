@@ -40,4 +40,19 @@ public class ItemParamController {
         }
 
     }
+
+    //新增规格参数信息
+    @RequestMapping("insertItemParam")
+    public Result insertItemParam(TbItemParam tbItemParam) {
+        try {
+            itemFeign.insertItemParam(tbItemParam);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("新增商品规格参数名称失败");
+        }
+    }
+
+
+
 }
