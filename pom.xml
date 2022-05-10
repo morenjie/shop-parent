@@ -20,6 +20,7 @@
         <module>shop-content-web</module>
         <module>shop-content-service</module>
         <module>shop-content-feign</module>
+        <module>shop-portal-web</module>
     </modules>
 
     <!-- 自定义属性标签 -->

@@ -2,6 +2,7 @@ package com.qf.controller;
 
 import com.qf.pojo.TbItemCat;
 import com.qf.service.ItemCategoryService;
+import com.qf.utils.CatResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,4 +21,8 @@ public class ItemCategoryController {
         return itemCategoryService.selectItemCategoryByParentId(id);
     }
 
+    @RequestMapping("/service/itemCategory/selectItemCategoryAll")
+    CatResult selectItemCategoryAll(){
+        return itemCategoryService.selectItemCategoryAll();
+    }
 }

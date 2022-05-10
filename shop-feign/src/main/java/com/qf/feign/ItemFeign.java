@@ -3,6 +3,7 @@ package com.qf.feign;
 import com.qf.pojo.TbItem;
 import com.qf.pojo.TbItemCat;
 import com.qf.pojo.TbItemParam;
+import com.qf.utils.CatResult;
 import com.qf.utils.PageResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,4 +53,8 @@ public interface ItemFeign {
 
     @RequestMapping("/service/itemParam/deleteItemParamById")
     void deleteItemParamById(@RequestParam("id") Long id);
+
+    @RequestMapping("/service/itemCategory/selectItemCategoryAll")
+    CatResult selectItemCategoryAll();
+
 }
