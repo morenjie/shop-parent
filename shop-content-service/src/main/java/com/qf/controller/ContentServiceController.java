@@ -2,6 +2,7 @@ package com.qf.controller;
 
 import com.qf.pojo.TbContentCategory;
 import com.qf.service.ContentService;
+import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,15 @@ public class ContentServiceController {
     }
 
     @RequestMapping("service/content/deleteContentCategoryById")
-    void deleteContentCategoryById(@RequestParam("categoryId") Long categoryId){
+    void deleteContentCategoryById(@RequestParam("categoryId") Long categoryId) {
         contentService.deleteContentCategoryById(categoryId);
+    }
+
+    @RequestMapping("service/content/selectTbContentAllByCategoryId")
+    PageResult selectTbContentAllByCategoryId(@RequestParam("categoryId") Long categoryId,
+                                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                              @RequestParam(value = "rows", required = false, defaultValue = "5") Integer rows) {
+        return contentService.selectTbContentAllByCategoryId(categoryId, page, rows);
     }
 
 }

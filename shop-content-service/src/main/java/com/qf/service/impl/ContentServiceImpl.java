@@ -1,9 +1,15 @@
 package com.qf.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.qf.mapper.TbContentCategoryMapper;
+import com.qf.mapper.TbContentMapper;
+import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
 import com.qf.pojo.TbContentCategoryExample;
+import com.qf.pojo.TbContentExample;
 import com.qf.service.ContentService;
+import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +23,9 @@ import java.util.List;
 public class ContentServiceImpl implements ContentService {
     @Autowired
     TbContentCategoryMapper tbContentCategoryMapper;
+
+    @Autowired
+    TbContentMapper tbContentMapper;
 
     @Override
     public List<TbContentCategory> selectContentCategoryByParentId(Long id) {
@@ -79,5 +88,22 @@ public class ContentServiceImpl implements ContentService {
             //修改父节点的状态消息
             tbContentCategoryMapper.updateByPrimaryKeySelective(parentContentCategory);
         }
+    }
+
+    @Override
+    public PageResult selectTbContentAllByCategoryId(Long categoryId, Integer page, Integer rows) {
+        PageHelper.startPage(page, rows);
+        //根据内容分类id查询对应的消息
+        System.out.println(categoryId+"~~"+page+"~~"+rows);
+        TbContentExample example = new TbContentExample();
+        example.setOrderByClause("updated DESC");
+        example.createCriteria().andCategoryIdEqualTo(categoryId);
+        List<TbContent> tbContents = tbContentMapper.selectByExample(example);
+        PageInfo<TbContent> pageInfo = new PageInfo<>();
+        PageResult pageResult = new PageResult();
+        pageResult.setPageIndex(pageInfo.getPageNum());
+        pageResult.setTotalPage(pageInfo.getTotal());
+        pageResult.setResult(tbContents);
+        return pageResult;
     }
 }

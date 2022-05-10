@@ -2,6 +2,7 @@ package com.qf.controller;
 
 import com.qf.feign.ContentFeign;
 import com.qf.pojo.TbContentCategory;
+import com.qf.utils.PageResult;
 import com.qf.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +41,9 @@ public class ContentController {
         }
     }
 
+    //删除内容分类节点消息
     @RequestMapping("deleteContentCategoryById")
-    public Result deleteContentCategoryById(Long categoryId) {
+    public Result deleteContentCategoryById(@RequestParam("categoryId") Long categoryId) {
         try {
             contentFeign.deleteContentCategoryById(categoryId);
             return Result.ok();
@@ -50,4 +52,18 @@ public class ContentController {
             return Result.error("删除内容分类信息失败");
         }
     }
+
+    //查询内容消息
+    @RequestMapping("selectTbContentAllByCategoryId")
+    public Result selectTbContentAllByCategoryId(@RequestParam("categoryId") Long categoryId,
+                                                 @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                                 @RequestParam(value = "rows", required = false, defaultValue = "5") Integer rows) {
+        PageResult pageResult = contentFeign.selectTbContentAllByCategoryId(categoryId, page, rows);
+        if (pageResult != null) {
+            return Result.ok(pageResult);
+        } else {
+            return Result.error("分页展示内容信息失败");
+        }
+    }
+
 }
