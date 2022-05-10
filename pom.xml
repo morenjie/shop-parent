@@ -17,6 +17,9 @@
         <module>shop-utils</module>
         <module>shop-web</module>
         <module>shop-upload</module>
+        <module>shop-content-web</module>
+        <module>shop-content-service</module>
+        <module>shop-content-feign</module>
     </modules>
 
     <!-- 自定义属性标签 -->
