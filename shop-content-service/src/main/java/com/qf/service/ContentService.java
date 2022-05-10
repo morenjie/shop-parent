@@ -10,4 +10,8 @@ public interface ContentService {
 
     //新增内容节点
     void insertContentCategory(TbContentCategory tbContentCategory);
+
+    //删除内容节点
+    void deleteContentCategoryById(Long categoryId);
+
 }

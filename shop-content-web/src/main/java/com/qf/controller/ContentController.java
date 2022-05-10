@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("backend")
+@RequestMapping("backend/content")
 public class ContentController {
     @Autowired
     ContentFeign contentFeign;
 
     //展示内容分类信息
-    @RequestMapping("content/selectContentCategoryByParentId")
+    @RequestMapping("selectContentCategoryByParentId")
     public Result selectContentCategoryByParentId(@RequestParam(value = "id", required = false, defaultValue = "0") Long id) {
         try {
             List<TbContentCategory> tbContentCategoryList = contentFeign.selectContentCategoryByParentId(id);
@@ -29,7 +29,7 @@ public class ContentController {
     }
 
     //新增内容分类信息
-    @RequestMapping("content/insertContentCategory")
+    @RequestMapping("insertContentCategory")
     public Result insertContentCategory(TbContentCategory tbContentCategory) {
         try {
             contentFeign.insertContentCategory(tbContentCategory);
@@ -37,6 +37,17 @@ public class ContentController {
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("新增内容分类信息失败");
+        }
+    }
+
+    @RequestMapping("deleteContentCategoryById")
+    public Result deleteContentCategoryById(Long categoryId) {
+        try {
+            contentFeign.deleteContentCategoryById(categoryId);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("删除内容分类信息失败");
         }
     }
 }

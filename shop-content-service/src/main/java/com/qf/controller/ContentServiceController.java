@@ -28,5 +28,9 @@ public class ContentServiceController {
         contentService.insertContentCategory(tbContentCategory);
     }
 
+    @RequestMapping("service/content/deleteContentCategoryById")
+    void deleteContentCategoryById(@RequestParam("categoryId") Long categoryId){
+        contentService.deleteContentCategoryById(categoryId);
+    }
 
 }

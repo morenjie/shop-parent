@@ -39,13 +39,45 @@ public class ContentServiceImpl implements ContentService {
         //获取当前新增节点的父节点
         Long parentId = tbContentCategory.getParentId();
         TbContentCategory parentContentCategory = this.tbContentCategoryMapper.selectByPrimaryKey(parentId);
-        Boolean isParent =parentContentCategory.getIsParent();
-        if(!isParent){
+        Boolean isParent = parentContentCategory.getIsParent();
+        if (!isParent) {
             //当前新增节点的父节点的is_parent字段为0 本身就是一个子节点点 需要修改is_parent的值
             parentContentCategory.setIsParent(true);
             parentContentCategory.setUpdated(new Date());
             //执行修改操作
-            tbContentCategoryMapper.updateByPrimaryKey (parentContentCategory);
+            tbContentCategoryMapper.updateByPrimaryKey(parentContentCategory);
+        }
+    }
+
+    @Override
+    public void deleteContentCategoryById(Long categoryId) {
+        //判断当前节点是否可以删除
+        TbContentCategoryExample example = new TbContentCategoryExample();
+        example.createCriteria().andParentIdEqualTo(categoryId);
+        List<TbContentCategory> categoryList = tbContentCategoryMapper.selectByExample(example);
+        if (categoryList.size() > 0) {
+            //说明当前节点存在子节点，不允许删除
+            throw new RuntimeException("当前节点不允许删除");
+        }
+        //可以删除当前子节点
+        //获取当前节点对象
+        TbContentCategory contentCategory = tbContentCategoryMapper.selectByPrimaryKey(categoryId);
+        //获取当前节点的父id
+        Long parentId = contentCategory.getParentId();
+        //查询当前节点的兄弟节点
+        TbContentCategoryExample example1 = new TbContentCategoryExample();
+        example1.createCriteria().andParentIdEqualTo(parentId);
+        List<TbContentCategory> categoryList1 = tbContentCategoryMapper.selectByExample(example1);
+        //删除节点
+        tbContentCategoryMapper.deleteByPrimaryKey(categoryId);
+        //有些只有自己本身这个节点存在
+        if (categoryList1.size() == 1) {
+            //获取当前节点的父节点
+            TbContentCategory parentContentCategory = tbContentCategoryMapper.selectByPrimaryKey(parentId);
+            parentContentCategory.setUpdated(new Date());
+            parentContentCategory.setIsParent(false);
+            //修改父节点的状态消息
+            tbContentCategoryMapper.updateByPrimaryKeySelective(parentContentCategory);
         }
     }
 }

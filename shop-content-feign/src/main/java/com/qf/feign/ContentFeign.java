@@ -17,4 +17,6 @@ public interface ContentFeign {
     void insertContentCategory(@RequestBody TbContentCategory tbContentCategory);
 
 
+    @RequestMapping("service/content/deleteContentCategoryById")
+    void deleteContentCategoryById(@RequestParam("categoryId") Long categoryId);
 }
