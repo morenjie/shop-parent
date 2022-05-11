@@ -94,7 +94,7 @@ public class ContentServiceImpl implements ContentService {
     public PageResult selectTbContentAllByCategoryId(Long categoryId, Integer page, Integer rows) {
         PageHelper.startPage(page, rows);
         //根据内容分类id查询对应的消息
-        System.out.println(categoryId+"~~"+page+"~~"+rows);
+        System.out.println(categoryId + "~~" + page + "~~" + rows);
         TbContentExample example = new TbContentExample();
         example.setOrderByClause("updated DESC");
         example.createCriteria().andCategoryIdEqualTo(categoryId);
@@ -105,5 +105,12 @@ public class ContentServiceImpl implements ContentService {
         pageResult.setTotalPage(pageInfo.getTotal());
         pageResult.setResult(tbContents);
         return pageResult;
+    }
+
+    @Override
+    public void insertTbContent(TbContent tbcontent) {
+        tbcontent.setCreated(new Date());
+        tbcontent.setUpdated(new Date());
+        tbContentMapper.insertSelective(tbcontent);
     }
 }

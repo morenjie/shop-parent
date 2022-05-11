@@ -1,6 +1,7 @@
 package com.qf.controller;
 
 import com.qf.feign.ContentFeign;
+import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
 import com.qf.utils.PageResult;
 import com.qf.utils.Result;
@@ -63,6 +64,18 @@ public class ContentController {
             return Result.ok(pageResult);
         } else {
             return Result.error("分页展示内容信息失败");
+        }
+    }
+
+    //新增内容
+    @RequestMapping("insertTbContent")
+    public Result insertTbContent(TbContent tbcontent) {
+        try {
+            contentFeign.insertTbContent(tbcontent);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("新增内容消息失败");
         }
     }
 

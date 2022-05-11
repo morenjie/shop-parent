@@ -1,5 +1,6 @@
 package com.qf.service;
 
+import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
 import com.qf.utils.PageResult;
 
@@ -15,6 +16,9 @@ public interface ContentService {
     //删除内容节点
     void deleteContentCategoryById(Long categoryId);
 
-    //分页查询内容分类节点消息
+    //分页查询内容分类节点信息
     PageResult selectTbContentAllByCategoryId(Long categoryId, Integer page, Integer rows);
+
+    //新增内容节点信息
+    void insertTbContent(TbContent tbcontent);
 }

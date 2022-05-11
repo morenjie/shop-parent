@@ -33,29 +33,34 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
     @Override
     public CatResult selectItemCategoryAll() {
         CatResult catResult = new CatResult();
+        //默认查询一级分类
         catResult.setData(getCatList(0L));
         return catResult;
     }
 
     //根据parentId展示商品的分类信息
     private List<?> getCatList(long parentId) {
+        //创建查询条件
         TbItemCatExample example = new TbItemCatExample();
         example.createCriteria().andParentIdEqualTo(parentId);
         List<TbItemCat> tbItemCatList = tbItemCatMapper.selectByExample(example);
         List list = new ArrayList();
         int count = 0;
         for (TbItemCat tbItemCat : tbItemCatList) {
+            //判断是否是父节点
             if (tbItemCat.getIsParent()) {
                 CatNode catNode = new CatNode();
                 catNode.setName(tbItemCat.getName());
+                //递归思想 查询子节点
                 catNode.setItem(getCatList(tbItemCat.getId()));
                 list.add(catNode);
                 count++;
+                //只展示18行数据
                 if (count == 18) {
-                    //只展示18行数据
                     break;
                 }
             } else {
+                //如果是子节点也放到集合里面
                 list.add(tbItemCat.getName());
             }
         }

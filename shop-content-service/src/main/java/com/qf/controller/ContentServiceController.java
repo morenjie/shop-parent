@@ -1,5 +1,6 @@
 package com.qf.controller;
 
+import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
 import com.qf.service.ContentService;
 import com.qf.utils.PageResult;
@@ -39,6 +40,11 @@ public class ContentServiceController {
                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                               @RequestParam(value = "rows", required = false, defaultValue = "5") Integer rows) {
         return contentService.selectTbContentAllByCategoryId(categoryId, page, rows);
+    }
+
+    @RequestMapping("service/content/insertTbContent")
+    void insertTbContent(@RequestBody TbContent tbcontent){
+        contentService.insertTbContent(tbcontent);
     }
 
 }

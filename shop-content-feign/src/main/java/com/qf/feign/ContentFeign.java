@@ -1,5 +1,6 @@
 package com.qf.feign;
 
+import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
 import com.qf.utils.PageResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,4 +27,6 @@ public interface ContentFeign {
                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                               @RequestParam(value = "rows", required = false, defaultValue = "5") Integer rows);
 
+    @RequestMapping("service/content/insertTbContent")
+    void insertTbContent(@RequestBody TbContent tbcontent);
 }
