@@ -9,11 +9,13 @@ import com.qf.pojo.TbContentCategory;
 import com.qf.pojo.TbContentCategoryExample;
 import com.qf.pojo.TbContentExample;
 import com.qf.service.ContentService;
+import com.qf.utils.AdNode;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -112,5 +114,38 @@ public class ContentServiceImpl implements ContentService {
         tbcontent.setCreated(new Date());
         tbcontent.setUpdated(new Date());
         tbContentMapper.insertSelective(tbcontent);
+    }
+
+    /**
+     * #大广告位图片信息
+     * AD_CATEGORY_ID: 89
+     * AD_HEIGHT: 240
+     * AD_WIDTH: 670
+     * AD_HEIGHTB: 240
+     * AD_WIDTHB: 550
+     *
+     * @return
+     */
+    @Override
+    public List<AdNode> selectFrontendContentByAD() {
+        List<AdNode> adNodeList = new ArrayList<>();
+        TbContentExample example = new TbContentExample();
+        example.createCriteria().andCategoryIdEqualTo(89L);
+        List<TbContent> tbContentList = tbContentMapper.selectByExample(example);
+        int i = 1;
+        for (TbContent tbContent : tbContentList) {
+            AdNode adNode = new AdNode();
+            adNode.setHeight(240);
+            adNode.setWidth(670);
+            adNode.setHeightB(240);
+            adNode.setWidthB(550);
+            adNode.setHref(tbContent.getUrl());
+            adNode.setSrc(tbContent.getPic());
+            adNode.setSrcB(tbContent.getPic2());
+            adNode.setAlt("banner" + i);
+            i++;
+            adNodeList.add(adNode);
+        }
+        return adNodeList;
     }
 }

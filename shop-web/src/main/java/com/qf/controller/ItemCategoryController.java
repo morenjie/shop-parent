@@ -17,7 +17,7 @@ public class ItemCategoryController {
     @Autowired
     ItemFeign itemFeign;
 
-    //根据商品分类的parentId查询对应的商品分类消息
+    //根据商品分类的parentId查询对应的商品分类信息
     @RequestMapping("selectItemCategoryByParentId")
     public Result selectItemCategoryByParentId(@RequestParam(value = "id", required = false, defaultValue = "0") Long id) {
         List<TbItemCat> tbItemCats = itemFeign.selectItemCategoryByParentId(id);

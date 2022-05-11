@@ -15,7 +15,7 @@ public class ItemCategoryController {
     @Autowired
     ItemCategoryService itemCategoryService;
 
-    //根据类目父id查询对应的商品分类消息
+    //根据类目父id查询对应的商品分类信息
     @RequestMapping("/service/itemCategory/selectItemCategoryByParentId")
     List<TbItemCat> selectItemCategoryByParentId(@RequestParam(value = "id", required = false, defaultValue = "0") Long id) {
         return itemCategoryService.selectItemCategoryByParentId(id);

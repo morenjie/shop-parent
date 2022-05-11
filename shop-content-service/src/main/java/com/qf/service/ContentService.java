@@ -2,6 +2,7 @@ package com.qf.service;
 
 import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
+import com.qf.utils.AdNode;
 import com.qf.utils.PageResult;
 
 import java.util.List;
@@ -21,4 +22,8 @@ public interface ContentService {
 
     //新增内容节点信息
     void insertTbContent(TbContent tbcontent);
+
+    //展示首页大广告信息
+    List<AdNode> selectFrontendContentByAD();
+
 }

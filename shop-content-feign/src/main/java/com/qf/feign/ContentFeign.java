@@ -2,6 +2,7 @@ package com.qf.feign;
 
 import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
+import com.qf.utils.AdNode;
 import com.qf.utils.PageResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,4 +30,8 @@ public interface ContentFeign {
 
     @RequestMapping("service/content/insertTbContent")
     void insertTbContent(@RequestBody TbContent tbcontent);
+
+    @RequestMapping("service/content/selectFrontendContentByAD")
+    List<AdNode> selectFrontendContentByAD();
+
 }

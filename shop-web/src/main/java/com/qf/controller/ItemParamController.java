@@ -53,7 +53,7 @@ public class ItemParamController {
         }
     }
 
-    //删除规格参数名称消息
+    //删除规格参数名称信息
     @RequestMapping("deleteItemParamById")
     public Result deleteItemParamById(Long id) {
         try {

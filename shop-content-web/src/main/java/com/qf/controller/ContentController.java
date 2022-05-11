@@ -42,7 +42,7 @@ public class ContentController {
         }
     }
 
-    //删除内容分类节点消息
+    //删除内容分类节点信息
     @RequestMapping("deleteContentCategoryById")
     public Result deleteContentCategoryById(@RequestParam("categoryId") Long categoryId) {
         try {
@@ -54,7 +54,7 @@ public class ContentController {
         }
     }
 
-    //查询内容消息
+    //查询内容信息
     @RequestMapping("selectTbContentAllByCategoryId")
     public Result selectTbContentAllByCategoryId(@RequestParam("categoryId") Long categoryId,
                                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -75,7 +75,7 @@ public class ContentController {
             return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.error("新增内容消息失败");
+            return Result.error("新增内容信息失败");
         }
     }
 

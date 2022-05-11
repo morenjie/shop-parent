@@ -3,6 +3,7 @@ package com.qf.controller;
 import com.qf.pojo.TbContent;
 import com.qf.pojo.TbContentCategory;
 import com.qf.service.ContentService;
+import com.qf.utils.AdNode;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,11 +31,13 @@ public class ContentServiceController {
         contentService.insertContentCategory(tbContentCategory);
     }
 
+    //删除内容节点信息
     @RequestMapping("service/content/deleteContentCategoryById")
     void deleteContentCategoryById(@RequestParam("categoryId") Long categoryId) {
         contentService.deleteContentCategoryById(categoryId);
     }
 
+    //分页展示内容信息
     @RequestMapping("service/content/selectTbContentAllByCategoryId")
     PageResult selectTbContentAllByCategoryId(@RequestParam("categoryId") Long categoryId,
                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -42,9 +45,15 @@ public class ContentServiceController {
         return contentService.selectTbContentAllByCategoryId(categoryId, page, rows);
     }
 
+    //新增内容节点信息
     @RequestMapping("service/content/insertTbContent")
-    void insertTbContent(@RequestBody TbContent tbcontent){
+    void insertTbContent(@RequestBody TbContent tbcontent) {
         contentService.insertTbContent(tbcontent);
     }
 
+    //展示首页大广告信息
+    @RequestMapping("service/content/selectFrontendContentByAD")
+    List<AdNode> selectFrontendContentByAD() {
+        return contentService.selectFrontendContentByAD();
+    }
 }
