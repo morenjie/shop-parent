@@ -2,6 +2,7 @@ package com.qf.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.qf.client.RedisClient;
 import com.qf.mapper.TbContentCategoryMapper;
 import com.qf.mapper.TbContentMapper;
 import com.qf.pojo.TbContent;
@@ -28,6 +29,9 @@ public class ContentServiceImpl implements ContentService {
 
     @Autowired
     TbContentMapper tbContentMapper;
+
+    @Autowired
+    RedisClient redisClient;
 
     @Override
     public List<TbContentCategory> selectContentCategoryByParentId(Long id) {
@@ -128,6 +132,10 @@ public class ContentServiceImpl implements ContentService {
      */
     @Override
     public List<AdNode> selectFrontendContentByAD() {
+        List<AdNode> adNodeListInRedis = (List<AdNode>) redisClient.get("ADNODE_LIST_KEY");
+        if(adNodeListInRedis!=null){
+            return adNodeListInRedis;
+        }
         List<AdNode> adNodeList = new ArrayList<>();
         TbContentExample example = new TbContentExample();
         example.createCriteria().andCategoryIdEqualTo(89L);
@@ -146,6 +154,7 @@ public class ContentServiceImpl implements ContentService {
             i++;
             adNodeList.add(adNode);
         }
+        redisClient.set("ADNODE_LIST_KEY",adNodeList);
         return adNodeList;
     }
 }
