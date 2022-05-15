@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: search-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shop?characterEncoding=UTF-8
+    username: root
+    password: mysqlroot
+    type: com.alibaba.druid.pool.DruidDataSource
+  data:
+    elasticsearch:
+      cluster-nodes: losthost:9200
+server:
+  port: 8095
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+#索引名称
+ES_INDEX_NAME: qf
+#类型名称
+ES_TYPE_NAME: item

@@ -22,6 +22,9 @@
         <module>shop-content-feign</module>
         <module>shop-portal-web</module>
         <module>shop-redis-common</module>
+        <module>shop-search-service</module>
+        <module>shop-search-feign</module>
+        <module>shop-search-web</module>
     </modules>
 
     <!-- 自定义属性标签 -->
