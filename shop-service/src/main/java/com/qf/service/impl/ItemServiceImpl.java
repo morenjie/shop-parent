@@ -68,10 +68,21 @@ public class ItemServiceImpl implements ItemService {
         }
         //如果缓存里面没有的话，就从数据库里面取
         tbItem = tbItemMapper.selectByPrimaryKey(itemId);
-        //取出来之后，再放入缓存里面即可
-        redisClient.set(ITEM_INFO + ":" + itemId + ":" + BASE, tbItem);
-        //设置key的过期时间
-        redisClient.expire(ITEM_INFO + ":" + itemId + ":" + BASE, ITEM_INFO_EXPIRE);
+        //解决缓存击穿的问题
+        if (redisClient.setnx("SETNX_BASC_LOCK_KEY"+":"+itemId,itemId,30L)){//获取到锁对象
+            //解决缓存穿透的问题
+            if (tbItem == null) {
+                //即使是空的对象  我们也需要将其缓存起来 下一次同样的请求就会直接从redis里面获取从而保护了后端数据库
+                redisClient.set(ITEM_INFO + ":" + itemId + ":" + BASE, "");
+                //设置key的过期时间，避免对redis内存空间的占用
+                redisClient.expire(ITEM_INFO + ":" + itemId + ":" + BASE, 60 * 60 * 24);
+                return tbItem;
+            }
+            //取出来之后，再放入缓存里面即可
+            redisClient.set(ITEM_INFO + ":" + itemId + ":" + BASE, tbItem);
+            //设置key的过期时间
+            redisClient.expire(ITEM_INFO + ":" + itemId + ":" + BASE, ITEM_INFO_EXPIRE);
+        }
         return tbItem;
     }
 
@@ -185,12 +196,20 @@ public class ItemServiceImpl implements ItemService {
         TbItemDescExample example = new TbItemDescExample();
         example.createCriteria().andItemIdEqualTo(itemId);
         List<TbItemDesc> tbItemDescList = tbItemDescMapper.selectByExampleWithBLOBs(example);
-        if (tbItemDescList != null && tbItemDescList.size() > 0) {
-            //放在缓存里面
-            redisClient.set(ITEM_INFO + ":" + itemId + ":" + DESC, tbItemDescList.get(0));
-            //设置key的过期时间
-            redisClient.expire(ITEM_INFO + ":" + itemId + ":" + DESC, ITEM_INFO_EXPIRE);
-            return tbItemDescList.get(0);
+        //解决缓存击穿的问题
+        if (redisClient.setnx("SETNX_BASC_LOCK_KEY"+":"+itemId,itemId,30L)) {//获取到锁对象
+            if (tbItemDescList.size() == 0) {
+                redisClient.set(ITEM_INFO + ":" + itemId + ":" + DESC, "");
+                redisClient.expire(ITEM_INFO + ":" + itemId + ":" + DESC, 60 * 60 * 24);
+                return tbItemDescList.get(0);
+            }
+            if (tbItemDescList != null && tbItemDescList.size() > 0) {
+                //放在缓存里面
+                redisClient.set(ITEM_INFO + ":" + itemId + ":" + DESC, tbItemDescList.get(0));
+                //设置key的过期时间
+                redisClient.expire(ITEM_INFO + ":" + itemId + ":" + DESC, ITEM_INFO_EXPIRE);
+                return tbItemDescList.get(0);
+            }
         }
         return null;
     }

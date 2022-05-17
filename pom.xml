@@ -25,6 +25,7 @@
         <module>shop-search-service</module>
         <module>shop-search-feign</module>
         <module>shop-search-web</module>
+        <module>shop-detail-web</module>
     </modules>
 
     <!-- 自定义属性标签 -->
