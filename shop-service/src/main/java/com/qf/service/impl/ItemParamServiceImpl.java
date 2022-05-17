@@ -2,13 +2,18 @@ package com.qf.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.qf.client.RedisClient;
 import com.qf.mapper.TbItemCatMapper;
+import com.qf.mapper.TbItemParamItemMapper;
 import com.qf.mapper.TbItemParamMapper;
 import com.qf.pojo.TbItemParam;
 import com.qf.pojo.TbItemParamExample;
+import com.qf.pojo.TbItemParamItem;
+import com.qf.pojo.TbItemParamItemExample;
 import com.qf.service.ItemParamService;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,22 @@ public class ItemParamServiceImpl implements ItemParamService {
 
     @Autowired
     TbItemCatMapper tbItemCatMapper;
+
+    @Autowired
+    TbItemParamItemMapper tbItemParamItemMapper;
+
+    @Autowired
+    RedisClient redisClient;
+
+    @Value("${ITEM_INFO}")
+    private String ITEM_INFO;
+
+    @Value("${PARAM}")
+    private String PARAM;
+
+    @Value("${ITEM_INFO_EXPIRE}")
+    private Integer ITEM_INFO_EXPIRE;
+
 
     @Override
     public TbItemParam selectItemParamByItemCatId(Long itemCatId) {
@@ -76,5 +97,25 @@ public class ItemParamServiceImpl implements ItemParamService {
     public void deleteItemParamById(Long id) {
         //根据主键删除
         tbItemParamMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public TbItemParamItem selectTbItemParamItemByItemId(Long itemId) {
+        //查询缓存
+        TbItemParamItem tbItemParamItem = (TbItemParamItem) redisClient.get(ITEM_INFO + ":" + itemId + ":" + PARAM);
+        if (tbItemParamItem != null) {
+            return tbItemParamItem;
+        }
+        TbItemParamItemExample example = new TbItemParamItemExample();
+        example.createCriteria().andItemIdEqualTo(itemId);
+        List<TbItemParamItem> tbItemParamItems = tbItemParamItemMapper.selectByExample(example);
+        if (tbItemParamItems != null && tbItemParamItems.size() > 0) {
+            //设置缓存
+            redisClient.set(ITEM_INFO + ":" + itemId + ":" + PARAM, tbItemParamItems.get(0));
+            //设置缓存有效期
+            redisClient.expire(ITEM_INFO + ":" + itemId + ":" + PARAM, ITEM_INFO_EXPIRE);
+            return tbItemParamItems.get(0);
+        }
+        return null;
     }
 }

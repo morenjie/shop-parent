@@ -1,8 +1,6 @@
 package com.qf.feign;
 
-import com.qf.pojo.TbItem;
-import com.qf.pojo.TbItemCat;
-import com.qf.pojo.TbItemParam;
+import com.qf.pojo.*;
 import com.qf.utils.CatResult;
 import com.qf.utils.PageResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -54,7 +52,12 @@ public interface ItemFeign {
     @RequestMapping("/service/itemParam/deleteItemParamById")
     void deleteItemParamById(@RequestParam("id") Long id);
 
-    @RequestMapping("/service/itemCategory/selectItemCategoryAll")
+    @RequestMapping("/service/item/selectItemCategoryAll")
     CatResult selectItemCategoryAll();
 
+    @RequestMapping("/service/item/selectItemDescByItemId")
+    TbItemDesc selectItemDescByItemId(@RequestParam("itemId") Long itemId);
+
+    @RequestMapping("/service/itemParam/selectTbItemParamItemByItemId")
+    TbItemParamItem selectTbItemParamItemByItemId(@RequestParam("itemId") Long itemId);
 }

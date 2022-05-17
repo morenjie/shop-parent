@@ -1,6 +1,7 @@
 package com.qf.controller;
 
 import com.qf.pojo.TbItemParam;
+import com.qf.pojo.TbItemParamItem;
 import com.qf.service.ItemParamService;
 import com.qf.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,11 @@ public class ItemParamController {
     @RequestMapping("/service/itemParam/deleteItemParamById")
     void deleteItemParamById(@RequestParam("id") Long id) {
         itemParamService.deleteItemParamById(id);
+    }
+
+    //根据商品idc查询对应的规格参数信息
+    @RequestMapping("/service/itemParam/selectTbItemParamItemByItemId")
+    TbItemParamItem selectTbItemParamItemByItemId(@RequestParam("itemId") Long itemId) {
+        return itemParamService.selectTbItemParamItemByItemId(itemId);
     }
 }

@@ -35,3 +35,10 @@ eureka:
 ribbon:
   eureka:
     enabled: true
+
+#商品详情
+ITEM_INFO: ITEM_INFO
+BASE: BASE
+DESC: DSC
+PARAM: PARAM
+ITEM_INFO_EXPIRE: 86400

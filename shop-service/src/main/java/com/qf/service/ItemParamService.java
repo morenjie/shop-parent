@@ -1,6 +1,7 @@
 package com.qf.service;
 
 import com.qf.pojo.TbItemParam;
+import com.qf.pojo.TbItemParamItem;
 import com.qf.utils.PageResult;
 
 public interface ItemParamService {
@@ -13,4 +14,6 @@ public interface ItemParamService {
     void insertItemParam(TbItemParam tbItemParam);
 
     void deleteItemParamById(Long id);
+
+    TbItemParamItem selectTbItemParamItemByItemId(Long itemId);
 }

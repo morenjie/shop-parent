@@ -2,6 +2,7 @@ package com.qf.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.qf.client.RedisClient;
 import com.qf.mapper.TbItemCatMapper;
 import com.qf.mapper.TbItemDescMapper;
 import com.qf.mapper.TbItemMapper;
@@ -12,6 +13,7 @@ import com.qf.utils.IDUtils;
 import com.qf.utils.PageResult;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,10 +42,37 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     AmqpTemplate amqpTemplate;
 
+    @Autowired
+    RedisClient redisClient;
+
+    @Value("${ITEM_INFO}")
+    private String ITEM_INFO;
+
+    @Value("${BASE}")
+    private String BASE;
+
+    @Value("${DESC}")
+    private String DESC;
+
+    @Value("${ITEM_INFO_EXPIRE}")
+    private Integer ITEM_INFO_EXPIRE;
+
+
     //根据主键查询
     @Override
     public TbItem selectItemInfo(Long itemId) {
-        return tbItemMapper.selectByPrimaryKey(itemId);
+        //首先需要查询缓存，如果缓存里面存在，就直接从缓存中取数据
+        TbItem tbItem = (TbItem) redisClient.get(ITEM_INFO + ":" + itemId + ":" + BASE);
+        if (tbItem != null) {
+            return tbItem;
+        }
+        //如果缓存里面没有的话，就从数据库里面取
+        tbItem = tbItemMapper.selectByPrimaryKey(itemId);
+        //取出来之后，再放入缓存里面即可
+        redisClient.set(ITEM_INFO + ":" + itemId + ":" + BASE, tbItem);
+        //设置key的过期时间
+        redisClient.expire(ITEM_INFO + ":" + itemId + ":" + BASE, ITEM_INFO_EXPIRE);
+        return tbItem;
     }
 
     @Override
@@ -144,5 +173,25 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItemById(Long itemId) {
         tbItemMapper.deleteByPrimaryKey(itemId);
+    }
+
+    @Override
+    public TbItemDesc selectItemDescByItemId(Long itemId) {
+        //查询缓存
+        TbItemDesc tbItemDesc = (TbItemDesc) redisClient.get(ITEM_INFO + ":" + itemId + ":" + DESC);
+        if (tbItemDesc != null) {
+            return tbItemDesc;
+        }
+        TbItemDescExample example = new TbItemDescExample();
+        example.createCriteria().andItemIdEqualTo(itemId);
+        List<TbItemDesc> tbItemDescList = tbItemDescMapper.selectByExampleWithBLOBs(example);
+        if (tbItemDescList != null && tbItemDescList.size() > 0) {
+            //放在缓存里面
+            redisClient.set(ITEM_INFO + ":" + itemId + ":" + DESC, tbItemDescList.get(0));
+            //设置key的过期时间
+            redisClient.expire(ITEM_INFO + ":" + itemId + ":" + DESC, ITEM_INFO_EXPIRE);
+            return tbItemDescList.get(0);
+        }
+        return null;
     }
 }

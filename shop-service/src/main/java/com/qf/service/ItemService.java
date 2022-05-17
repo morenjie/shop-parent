@@ -1,6 +1,7 @@
 package com.qf.service;
 
 import com.qf.pojo.TbItem;
+import com.qf.pojo.TbItemDesc;
 import com.qf.utils.PageResult;
 
 import java.util.Map;
@@ -18,4 +19,6 @@ public interface ItemService {
     void updateTbItem(TbItem tbItem, String desc, String itemParams);
 
     void deleteItemById(Long itemId);
+
+    TbItemDesc selectItemDescByItemId(Long itemId);
 }
