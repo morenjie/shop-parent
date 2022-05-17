@@ -10,6 +10,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.IndicesClient;
@@ -126,6 +127,18 @@ public class SearchServiceImpl implements SearchItemService {
             searchItemList.add(searchItem);
         }
         return searchItemList;
+    }
+
+    //新增文档
+    @Override
+    public void insertDocument(Long message) throws Exception {
+        //获取新增的searchItem
+        SearchItem searchItem = searchItemMapper.getSearchItemById(message);
+        //将新的searchItem新增到索引库中
+        IndexRequest indexRequest = new IndexRequest(ES_INDEX_NAME, ES_TYPE_NAME);
+        indexRequest.source(JsonUtils.objectToJson(searchItem), XContentType.JSON);
+        IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+        System.out.println(indexResponse);
     }
 
     //判断索引库是否存在的方法

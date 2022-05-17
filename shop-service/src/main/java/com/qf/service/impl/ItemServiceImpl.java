@@ -10,6 +10,7 @@ import com.qf.pojo.*;
 import com.qf.service.ItemService;
 import com.qf.utils.IDUtils;
 import com.qf.utils.PageResult;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     TbItemCatMapper tbItemCatMapper;
+
+    @Autowired
+    AmqpTemplate amqpTemplate;
 
     //根据主键查询
     @Override
@@ -88,6 +92,8 @@ public class ItemServiceImpl implements ItemService {
         tbItemParamItem.setCreated(new Date());
         tbItemParamItem.setUpdated(new Date());
         tbItemParamItemMapper.insertSelective(tbItemParamItem);
+        //新增完成之后 需要通过rabbitMQ向搜索微服务发送一条消息 搜索微服务收到这条消息之后 需要执行更新索引库的操作
+        amqpTemplate.convertAndSend("item_exchange", "item.add", itemId);
     }
 
     //回显商品信息

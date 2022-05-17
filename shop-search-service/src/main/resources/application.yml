@@ -10,6 +10,11 @@ spring:
   data:
     elasticsearch:
       cluster-nodes: losthost:9200
+  rabbitmq:
+    host: 192.168.2.49
+    username: admin
+    password: 123
+    virtual-host: /
 server:
   port: 8095
 eureka:
