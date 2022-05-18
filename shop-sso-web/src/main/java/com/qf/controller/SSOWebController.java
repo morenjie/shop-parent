@@ -3,12 +3,8 @@ package com.qf.controller;
 import com.qf.feign.SSOFeign;
 import com.qf.pojo.TbUser;
 import com.qf.utils.Result;
-import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -58,7 +54,7 @@ public class SSOWebController {
     public Result userLogin(@RequestBody TbUser tbUser) {
         try {
             Map<String, Object> map = ssoFeign.userLogin(tbUser);
-            return Result.ok();
+            return Result.ok(map);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("登录失败");
@@ -78,6 +74,19 @@ public class SSOWebController {
             return Result.ok(tbUser);
         } else {
             return Result.error("用户没有登录");
+        }
+    }
+
+    /**
+     * 用户退出登录
+     */
+    @RequestMapping("/logOut")
+    public Result logOut(String token) {
+        Boolean logOut = ssoFeign.logOut(token);
+        if (logOut) {
+            return Result.ok();
+        } else {
+            return Result.error("退出失败");
         }
     }
 }

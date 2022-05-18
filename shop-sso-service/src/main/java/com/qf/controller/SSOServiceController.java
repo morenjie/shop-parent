@@ -3,10 +3,7 @@ package com.qf.controller;
 import com.qf.pojo.TbUser;
 import com.qf.service.SSOService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -33,5 +30,10 @@ public class SSOServiceController {
     @RequestMapping("sso/service/getUserByToken")
     TbUser getUserByToken(@PathVariable("token") String token){
         return ssoService.getUserByToken(token);
+    }
+
+    @RequestMapping("sso/service/logOut")
+    Boolean logOut(String token){
+        return ssoService.logOut(token);
     }
 }

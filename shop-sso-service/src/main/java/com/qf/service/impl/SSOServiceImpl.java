@@ -91,4 +91,9 @@ public class SSOServiceImpl implements SSOService {
         return null;
     }
 
+    @Override
+    public Boolean logOut(String token) {
+        return redisClient.del("USER-INFO" + ":" + token);
+    }
+
 }

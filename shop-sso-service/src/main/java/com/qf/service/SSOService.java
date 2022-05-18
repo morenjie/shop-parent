@@ -12,4 +12,6 @@ public interface SSOService {
     void userRegister(TbUser tbUser);
 
     TbUser getUserByToken(String token);
+
+    Boolean logOut(String token);
 }

@@ -22,4 +22,7 @@ public interface SSOFeign {
 
     @RequestMapping("sso/service/getUserByToken")
     TbUser getUserByToken(@PathVariable("token") String token);
+
+    @RequestMapping("sso/service/logOut")
+    Boolean logOut(String token);
 }
