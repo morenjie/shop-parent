@@ -29,6 +29,9 @@
         <module>shop-sso-feign</module>
         <module>shop-sso-service</module>
         <module>shop-sso-web</module>
+        <module>shop-cart-feign</module>
+        <module>shop-cart-service</module>
+        <module>shop-cart-web</module>
     </modules>
 
     <!-- 自定义属性标签 -->

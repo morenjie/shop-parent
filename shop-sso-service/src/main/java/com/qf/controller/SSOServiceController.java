@@ -19,21 +19,22 @@ public class SSOServiceController {
     }
 
     @RequestMapping("sso/service/userRegister")
-    void userRegister(@RequestBody TbUser tbUser){
-         ssoService.userRegister(tbUser);
+    void userRegister(@RequestBody TbUser tbUser) {
+        ssoService.userRegister(tbUser);
     }
+
     @RequestMapping("sso/service/userLogin")
-    Map<String, Object> userLogin(@RequestBody TbUser tbUser){
+    Map<String, Object> userLogin(@RequestBody TbUser tbUser) {
         return ssoService.userLogin(tbUser);
     }
 
     @RequestMapping("sso/service/getUserByToken")
-    TbUser getUserByToken(@PathVariable("token") String token){
+    TbUser getUserByToken(@PathVariable("token") String token) {
         return ssoService.getUserByToken(token);
     }
 
     @RequestMapping("sso/service/logOut")
-    Boolean logOut(String token){
+    Boolean logOut(String token) {
         return ssoService.logOut(token);
     }
 }
