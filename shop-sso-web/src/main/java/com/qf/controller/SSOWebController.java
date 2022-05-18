@@ -1,11 +1,16 @@
 package com.qf.controller;
 
 import com.qf.feign.SSOFeign;
+import com.qf.pojo.TbUser;
 import com.qf.utils.Result;
+import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("frontend/sso")
@@ -29,6 +34,50 @@ public class SSOWebController {
             return Result.ok();
         } else {
             return Result.error("用户信息校验失败");
+        }
+    }
+
+    @RequestMapping("userRegister")
+    public Result userRegister(@RequestBody TbUser tbUser) {
+        try {
+            ssoFeign.userRegister(tbUser);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("注册失败");
+        }
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param tbUser
+     * @return
+     */
+    @RequestMapping("userLogin")
+    public Result userLogin(@RequestBody TbUser tbUser) {
+        try {
+            Map<String, Object> map = ssoFeign.userLogin(tbUser);
+            return Result.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("登录失败");
+        }
+    }
+
+    /**
+     * 根据token验证用户是否登录
+     *
+     * @param token
+     * @return
+     */
+    @RequestMapping("getUserByToken/{token}")
+    public Result getUserByToken(@PathVariable("token") String token) {
+        TbUser tbUser = ssoFeign.getUserByToken(token);
+        if (tbUser != null) {
+            return Result.ok(tbUser);
+        } else {
+            return Result.error("用户没有登录");
         }
     }
 }
