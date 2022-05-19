@@ -32,6 +32,9 @@
         <module>shop-cart-feign</module>
         <module>shop-cart-service</module>
         <module>shop-cart-web</module>
+        <module>shop-order-service</module>
+        <module>shop-order-web</module>
+        <module>shop-order-feign</module>
     </modules>
 
     <!-- 自定义属性标签 -->
