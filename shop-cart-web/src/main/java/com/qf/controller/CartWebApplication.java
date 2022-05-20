@@ -49,8 +49,11 @@ public class CartWebApplication {
                 addCartToCookie(request, response, cart);
             } else {
                 //用户已经登录
-
-
+                Map<String, TbItem> cart = getCartFromRedis(userId);
+                //将商品信息添加到购物车中
+                addItemToCart(cart, itemId, num);
+                //将购物车信息缓存到redis里面
+                addCartToRedis(userId, cart);
             }
             return Result.ok();
         } catch (Exception e) {
@@ -159,9 +162,10 @@ public class CartWebApplication {
             } else {
                 //已经登录，从缓存中获取购物车信息进行修改
                 Map<String, TbItem> cart = getCartFromRedis(userId);
-                //把商品信息添加到购物车中
-                addItemToCart(cart, itemId, num);
-                //购物车缓存到redis里面
+                TbItem tbItem = cart.get(itemId.toString());
+                tbItem.setNum(num);
+                cart.put(itemId.toString(), tbItem);
+                //将购物车信息进行重写的缓存
                 addCartToRedis(userId, cart);
             }
             return Result.ok();
@@ -204,6 +208,11 @@ public class CartWebApplication {
                 addCartToCookie(request, response, cart);
             } else {
                 //用户已登录
+                Map<String, TbItem> cart = getCartFromRedis(userId);
+                //删除购物车中的商品 本质就是通过key删除map集合中的数据
+                cart.remove(itemId.toString());
+                //将商品信息的购物车重新写入缓存里面
+                addCartToRedis(userId, cart);
             }
             return Result.ok();
         } catch (Exception e) {
