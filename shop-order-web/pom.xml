@@ -31,5 +31,10 @@
             <artifactId>shop-order-feign</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.qf.sso</groupId>
+            <artifactId>shop-sso-feign</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
