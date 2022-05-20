@@ -49,6 +49,8 @@ public class CartWebApplication {
                 addCartToCookie(request, response, cart);
             } else {
                 //用户已经登录
+
+
             }
             return Result.ok();
         } catch (Exception e) {
@@ -79,7 +81,7 @@ public class CartWebApplication {
         cart.put(itemId.toString(), tbItem);
     }
 
-    //从cookie端获取购物车信息
+    //从cookie端获取购物车信息（用户没有登录的情况下）
     private Map<String, TbItem> getCartFromCookie(HttpServletRequest request) {
         String cart_cookie_key = CookieUtils.getCookieValue(request, "CART_COOKIE_KEY", true);
         //将购物车的json串转换为Map
@@ -109,8 +111,16 @@ public class CartWebApplication {
                 }
                 return Result.ok(tbItemList);
             } else {
-                //登录的
-                return null;
+                //登录 从缓存中获取购物车信息
+                Map<String, TbItem> cartFromRedis = getCartFromRedis(userId);
+                List<TbItem> tbItemList = new ArrayList<>();
+                //获取cart中的所有value值
+                Set<String> keys = cartFromRedis.keySet();   //获取所有key的集合
+                for (String key : keys) {
+                    TbItem tbItem = cartFromRedis.get(key);
+                    tbItemList.add(tbItem);
+                }
+                return Result.ok(tbItemList);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,12 +158,32 @@ public class CartWebApplication {
                 addCartToCookie(request, response, cart);
             } else {
                 //已经登录，从缓存中获取购物车信息进行修改
-
+                Map<String, TbItem> cart = getCartFromRedis(userId);
+                //把商品信息添加到购物车中
+                addItemToCart(cart, itemId, num);
+                //购物车缓存到redis里面
+                addCartToRedis(userId, cart);
             }
             return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("修改购物车信息失败");
+        }
+    }
+
+    //将购物车信息缓存到redis里面
+    private void addCartToRedis(Long userId, Map<String, TbItem> cart) {
+        cartFeign.addCartToRedis(userId, cart);
+    }
+
+    //从redis缓存中获取购物车信息（已经登录的情况下）
+    private Map<String, TbItem> getCartFromRedis(Long userId) {
+        Map<String, TbItem> cart = cartFeign.getCartFromRedis(userId);
+        if (cart != null && cart.size() > 0) {
+            return cart;
+        } else {
+            //没有购物车第一次添加商品，需要手动初始化一个购物车
+            return new HashMap<String, TbItem>();
         }
     }
 

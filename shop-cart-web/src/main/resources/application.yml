@@ -10,3 +10,9 @@ eureka:
 #购物车
 CART_COOKIE_KEY: CART_COOKIE_KEY
 CART_COOKIE_EXPIRE: 604800
+# 设置feign的超时
+#请求连接的超时时间
+ribbon:
+  ConnectTimeout: 60000
+  #请求处理的超时时间
+  ReadTimeout: 60000
