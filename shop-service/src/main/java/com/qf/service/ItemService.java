@@ -21,4 +21,6 @@ public interface ItemService {
     void deleteItemById(Long itemId);
 
     TbItemDesc selectItemDescByItemId(Long itemId);
+
+    void updateTbItemByOrderId(String orderId);
 }

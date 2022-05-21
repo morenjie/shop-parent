@@ -13,6 +13,20 @@ spring:
     username: root
     password: mysqlroot
     type: com.alibaba.druid.pool.DruidDataSource
+  rabbitmq:
+    host: 192.168.2.49
+    username: admin
+    password: 123
+    virtual-host: /
+  redis:
+    cluster:
+      nodes:
+        - 192.168.2.49:7001
+        - 192.168.2.49:7002
+        - 192.168.2.49:7003
+        - 192.168.2.49:7004
+        - 192.168.2.49:7005
+        - 192.168.2.49:7006
 #订单
 ORDER_ID_KEY: ORDER_ID_KEY
 ORDER_ID_BEGIN: 100544

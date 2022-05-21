@@ -10,6 +10,7 @@ import com.qf.pojo.TbOrderItem;
 import com.qf.pojo.TbOrderShipping;
 import com.qf.service.OrderService;
 import com.qf.utils.JsonUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Value("${ORDER_ITEM_ID_KEY}")
     private String ORDER_ITEM_ID_KEY;
+
+    @Autowired
+    AmqpTemplate amqpTemplate;
 
     @Override
     public String insertOrder(OrderInfo orderInfo) {
@@ -78,6 +82,9 @@ public class OrderServiceImpl implements OrderService {
         tbOrderShipping.setOrderId(orderId.toString());
         tbOrderShipping.setCreated(new Date());
         tbOrderShippingMapper.insertSelective(tbOrderShipping);
-        return null;
+        //消息的发送     参数1 交换机 参数2 路由key  参数3 消息主题
+        amqpTemplate.convertAndSend("order_exchange","order.add",orderId.toString());
+        //将购物车列表里面添加到订单的商品删除
+        return orderId.toString();
     }
 }

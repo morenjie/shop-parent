@@ -3,10 +3,7 @@ package com.qf.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.qf.client.RedisClient;
-import com.qf.mapper.TbItemCatMapper;
-import com.qf.mapper.TbItemDescMapper;
-import com.qf.mapper.TbItemMapper;
-import com.qf.mapper.TbItemParamItemMapper;
+import com.qf.mapper.*;
 import com.qf.pojo.*;
 import com.qf.service.ItemService;
 import com.qf.utils.IDUtils;
@@ -44,6 +41,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     RedisClient redisClient;
+
+    @Autowired
+    TbOrderItemMapper tbOrderItemMapper;
 
     @Value("${ITEM_INFO}")
     private String ITEM_INFO;
@@ -212,5 +212,24 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         return null;
+    }
+
+    /**
+     * 扣减库存
+     * @param orderId
+     */
+    @Override
+    public void updateTbItemByOrderId(String orderId) {
+        TbOrderItemExample example = new TbOrderItemExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        List<TbOrderItem> tbOrderItemList = tbOrderItemMapper.selectByExample(example);
+        for (TbOrderItem tbOrderItem : tbOrderItemList) {
+            String itemId = tbOrderItem.getItemId();
+            Long aLong = Long.valueOf(itemId);
+            TbItem tbItem = tbItemMapper.selectByPrimaryKey(aLong);
+            tbItem.setNum(tbItem.getNum()-tbOrderItem.getNum());
+            //修改库存操作
+            tbItemMapper.updateByPrimaryKeySelective(tbItem);
+        }
     }
 }
