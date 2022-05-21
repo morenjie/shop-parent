@@ -94,4 +94,11 @@ public interface TbOrderMapper {
      * @mbggenerated Thu May 05 14:08:56 GMT+08:00 2022
      */
     int updateByPrimaryKey(TbOrder record);
+
+    /**
+     * 查询超时订单
+     * @return
+     */
+    List<TbOrder> selectTimeOutOrders();
+
 }

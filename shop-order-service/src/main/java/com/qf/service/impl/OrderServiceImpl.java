@@ -1,13 +1,11 @@
 package com.qf.service.impl;
 
 import com.qf.client.RedisClient;
+import com.qf.mapper.TbItemMapper;
 import com.qf.mapper.TbOrderItemMapper;
 import com.qf.mapper.TbOrderMapper;
 import com.qf.mapper.TbOrderShippingMapper;
-import com.qf.pojo.OrderInfo;
-import com.qf.pojo.TbOrder;
-import com.qf.pojo.TbOrderItem;
-import com.qf.pojo.TbOrderShipping;
+import com.qf.pojo.*;
 import com.qf.service.OrderService;
 import com.qf.utils.JsonUtils;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -34,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     RedisClient redisClient;
+    @Autowired
+    TbItemMapper tbItemMapper;
 
     @Value("${ORDER_ID_KEY}")
     private String ORDER_ID_KEY;
@@ -83,8 +83,41 @@ public class OrderServiceImpl implements OrderService {
         tbOrderShipping.setCreated(new Date());
         tbOrderShippingMapper.insertSelective(tbOrderShipping);
         //消息的发送     参数1 交换机 参数2 路由key  参数3 消息主题
-        amqpTemplate.convertAndSend("order_exchange","order.add",orderId.toString());
+        amqpTemplate.convertAndSend("order_exchange", "order.add", orderId.toString());
         //将购物车列表里面添加到订单的商品删除
         return orderId.toString();
+    }
+
+    /**
+     * 超时订单的处理
+     */
+    @Override
+    public void closeTimeoutOrder() {
+        //查询超时订单
+        List<TbOrder> tbOrderList = tbOrderMapper.selectTimeOutOrders();
+        //关闭超时订单
+        for (TbOrder tbOrder : tbOrderList) {
+            //设置订单的创建时间 修改时间 结束时间
+            tbOrder.setCreateTime(new Date());
+            tbOrder.setUpdateTime(new Date());
+            tbOrder.setCloseTime(new Date());
+            //修改订单状态为已关闭
+            tbOrder.setStatus(6);
+            //修改订单表的信息tb_order
+            tbOrderMapper.updateByPrimaryKeySelective(tbOrder);
+            //还原库存数量
+            //获取订单项 tb_order_item
+            TbOrderItemExample example = new TbOrderItemExample();
+            example.createCriteria().andOrderIdEqualTo(tbOrder.getOrderId());
+            List<TbOrderItem> tbOrderItemList = tbOrderItemMapper.selectByExample(example);
+            for (TbOrderItem tbOrderItem : tbOrderItemList) {
+                //查询商品信息 tb_item
+                TbItem tbItem = tbItemMapper.selectByPrimaryKey(Long.valueOf(tbOrderItem.getItemId()));
+                //修改库存
+                tbItem.setNum(tbItem.getNum() + tbOrderItem.getNum());
+                //执行修改操作
+                tbItemMapper.updateByPrimaryKeySelective(tbItem);
+            }
+        }
     }
 }
